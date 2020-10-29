@@ -1,10 +1,16 @@
 /*
 Instituto Tecnologico de Tijuana
+
 Depto de Sistemas y Computación
+
 Ing. En Sistemas Computacionales
+
 Autor: Rodolfo Zamora Lopez @nickname RodolfoZamora999
+
 Repositorio: https://github.com/RodolfoZamora999/2.1_ARM32_Resumen (Respositorio privado)
+
 Fecha de revisión:  26/10/2020
+
 Objetivo del programa:
 Primera practica introducctoria a ensamblador ARM32.
 */
