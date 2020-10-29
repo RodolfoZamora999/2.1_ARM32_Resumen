@@ -1,4 +1,4 @@
-![](imagen/portadatcnm.png)
+![](images/portadatcnm.png)
 
 ## Tecnológico Nacional de México
 ## Instituto Tecnológico de Tijuana
