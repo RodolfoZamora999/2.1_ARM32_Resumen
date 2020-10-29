@@ -167,11 +167,61 @@ as -o nombreprograma.o nombreprograma.s
 
 ![](images/compilacion_1.1.png)
 
->*Compilación y ejecución de un archivo ensamblador*
+>*Compilación, ejecución y uso de Debugger en un archivo ensamblador*
 
 
 <br></br>
 
 ## Capítulo 2: Tipos de datos y sentencias de alto nivel
 
-Se encuentra en construcción.... 
+### Modos de direccionamiento del ARM
+En la arquitectura ARM los accesos a memoria se hacen mediante instrucciones
+específicas ldr y str (luego veremos las variantes ldm, stm y las preprocesadas push y pop). El resto de instrucciones toman operandos desde registros o valores inmediatos, sin excepciones. En este caso la arquitectura nos fuerza a que trabajemos de un modo determinado: primero cargamos los registros desde memoria, luego procesamos el valor de estos registros con el amplio abanico de instrucciones del ARM, para finalmente volcar los resultados desde registros a memoria. Existen otras arquitecturas como la Intel x86, donde las instrucciones de procesado nos permiten leer o escribir directamente de memoria. Ningún método es mejor que otro, todo es cuestión de diseño. Normalmente se opta por direccionamiento a memoria en instrucciones de procesado en arquitecturas con un número reducido de registros, donde se emplea la memoria como almacén temporal. En nuestro caso disponemos de suficientes registros, por lo que podemos hacer el procesamiento sin necesidad de interactuar con la memoria, lo que por otro lado también es más rápido
+
+**Direccionamiento inmediato.** El operando fuente es una constante, formando parte de la instrucción.
+
+```assembler
+mov r0, #1
+add r2, r3, #4
+```
+
+**Direccionamiento inmediato con desplazamiento o rotación.** Es una variante del anterior en la cual se permiten operaciones intermedias sobre los registros.
+
+```assembler
+mov r1, r2, LSL #1     /* r1 <- (r2*2) */
+mov r1, r2, LSL #2     /* r1 <- (r2*4) */
+mov r1, r3, ASR #3     /* r1 <- (r3/8) */
+```
+Estas instrucciones también se usan implicitamente para la creación de constantes, rotando o desplazando constantes más pequeñas de forma transparente al usuario. Como todas las instrucciones ocupan 32 bits, es técnicamente imposible que podamos cargar en un registro cualquier constante de 32 bits con la instrucción mov. Por esta razón cuando se necesita cargar una constante más compleja en un registro (como una dirección a una variable de memoria) no podemos hacerlo con la instrucción mov, tenemos que recurrir a ldr con direccionamiento a memoria.
+
+<br></br>
+
+### Tipos de datos
+
+**Tipos de datos básicos.** En la siguiente tabla se recogen los diferentes tipos de datos básicos que podrán aparecer en los ejemplos, así como su
+tamaño y rango de representación.
+
+![](images/data_type.png)
+> *Diferentes tipos de datos en ARM*
+
+
+Nótese como en ensamblador los tipos son neutrales al signo, lo importante es la longitud en bits del tipo. La mayoría de las instrucciones (salvo multiplicación) hacen la misma operación tanto si se trata de un número natural como si es entero en complemento a dos. Nosotros decidiremos el tipo mediante las constantes que pongamos o según los flags que interpretemos del resultado de la operación.
+
+**Punteros.** Un **puntero** siempre ocupa 32 bits y contiene una dirección de memoria. En ensamblador no tienen tanta utilidad como en C, ya que disponemos de registros de sobra y es más costoso acceder a las variables a través de los punteros que directamente. En este ejemplo acceder a la dirección de var1 nos cuesta 2 ldrs a través del puntero, mientras que directamente se puede hacer con uno sólo
+
+<br></br>
+
+### Instrucciones de salto
+
+Las instrucciones de salto pueden producir saltos incondicionales (b y bx) o
+saltos condicionales. Cuando saltamos a una etiqueta empleamos b, mientras que
+si queremos saltar a un registro lo hacemos con bx. La variante de registro bx la
+solemos usar como instrucción de retorno de subrutina, raramente tiene otros usos.
+En los saltos condicionales añadimos dos o tres letras a la (b/bx), mediante las
+cuales condicionamos si se salta o no dependiendo del estado de los flags. Estas
+condiciones se pueden añadir a cualquier otra instrucción, aunque la mayoría de las
+veces lo que nos interesa es controlar el flujo del programa y así ejecutar o no un
+grupo de instrucciones dependiendo del resultado de una operación (reflejado en los
+flags).
+
+![](images/instruccion_salto.png)
