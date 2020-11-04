@@ -1,4 +1,4 @@
-  GNU nano 4.9.3                                                                                                     intro5,s                                                                                                      Modified
+                                                                                                 intro5,s                                                                                                      Modified
 /*Instituto Tecnologico de Tijuana
 
 Depto de Sistemas y Computación
